@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dd.security.mapper.DdUserMapper">
+
+    <!--结果集封装-->
+    <resultMap type="com.dd.security.entity.DdUser" id="DdUserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+    </resultMap>
+
+    <resultMap id="DdUserRoleResult" type="com.dd.security.entity.DdUser" extends="DdUserResult">
+        <collection property="roles" ofType="com.dd.security.entity.DdRole">
+            <id column="rid" property="id" />
+            <result column="rname" property="name" />
+            <result column="rnameZh" property="nameZh" />
+        </collection>
+    </resultMap>
+
+    <select id="selectByUsername" parameterType="java.lang.String" resultType="com.dd.security.entity.DdUser">
+        select id,username,password from dd_user where username=#{username}
+    </select>
+
+    <select id="getAllUser" resultMap="DdUserRoleResult" parameterType="com.dd.security.entity.DdUser">
+        select
+        u.id as id,
+            u.username as username,
+            u.`password` as `password`,
+            r.id as rid,
+            r.`name` as rname,
+            r.name_zh as rnameZh
+        from
+            dd_user as u
+        left join
+            dd_user_role as ur
+        on
+            u.id = ur.uid
+        left join
+            dd_role as r
+        on
+            ur.rid = r.id
+        <where>
+            <trim>
+                <if test="id != null  and id != '' and id!=0">and u.id = #{id}</if>
+                <if test="username != null  and username != ''">and u.username like concat('%', #{username}, '%')</if>
+                <if test="roles != null">and r.name_zh like concat('%', #{roles[0].nameZh}, '%')</if>
+            </trim>
+        </where>
+    </select>
+    <!--更新用户角色-->
+    <insert id="insertRecord">
+        insert into dd_user_role(uid,rid) values
+        <foreach collection="rids" item="rid" separator=",">
+            (#{uid},#{rid})
+        </foreach>
+    </insert>
+</mapper>

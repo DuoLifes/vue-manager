@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dd.service_animation.mapper.TagMapper">
+
+
+    <select id="selectByAnimationId" resultType="com.dd.service_animation.entity.Tag" parameterType="java.lang.String">
+        -- 根据动画id查询它所属标签
+        select
+            t.id as id,
+            t.type as type,
+            t.sort as sort,
+            t.change_T as changeT,
+            t.creation_T as creationT
+        from
+            tag as t
+                inner join
+            tag_animation as ta
+            on
+                ta.T_id = t.id
+        where
+            ta.A_id = #{aId}
+    </select>
+</mapper>

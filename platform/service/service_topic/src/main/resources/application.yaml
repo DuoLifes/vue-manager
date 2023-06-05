@@ -1,0 +1,22 @@
+server:
+  port: 8002 #微服务端口号为8001
+spring:
+  application:
+    name: service-blog #服务名
+    profiles:
+      active: dev #环境设置 dev表示构建阶段，test表示测试阶段，prod表示发布阶段
+  datasource: #数据源
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dd?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&rewriteBatchedStatements=true
+    username: root
+    password: root
+  jackson: #我们的时区是东八区，应该加8个小时，时区显示格式也需要改成我们想要的
+    date-format: yyyy-MM-DD HH:mm:ss
+    time-zone: GMT+8
+mybatis-plus:
+  mapper-locations: classpath*:mybatis/*.xml #配置mapper xml文件的路径
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头，请求是这个就是token的key
+  secret: ukc8BDbRigUDaY6pZFfWus2jZWLPHO #JWT加解密使用的密钥
+  expiration: 684808 #JWT有效时间（60*60*24）
+  tokenHead: Bearer #JWT负载中拿到的开头，token字符串，tokenHead是字符串的头，也就是以它开头

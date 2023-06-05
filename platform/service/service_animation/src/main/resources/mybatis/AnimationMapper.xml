@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dd.service_animation.mapper.AnimationMapper">
+    <!--结果集封装-->
+    <resultMap type="com.dd.service_animation.entity.Animation" id="AnimationResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="picture"    column="picture"    />
+        <result property="publish_T"    column="publishT"    />
+        <result property="region"    column="region"    />
+        <result property="play_D"    column="playD"    />
+        <result property="number"    column="number"    />
+        <result property="sort"    column="sort"    />
+        <result property="change_T"    column="changeT"    />
+        <result property="creation_T"    column="creationT"    />
+    </resultMap>
+    <!--公共头-->
+    <sql id="selectAnimation">
+        select
+            a.id,
+            a.name,
+            a.picture,
+            a.publish_T,
+            a.region,
+            a.play_D,
+            a.number,
+            a.sort,
+            a.change_T,
+            a.creation_T
+    </sql>
+    <select id="selectByTapId" resultMap="AnimationResult" parameterType="java.lang.String">
+        <include refid="selectAnimation"/>/*引入公共头*/
+        <!--根据tapid 获取下面所有动画-->
+        from
+            animation as a
+                left join
+            tag_animation as ta
+            on
+                a.id = ta.A_id
+                left join
+            tag as t
+            on
+                t.id = ta.T_id
+        where
+            t.id = #{tId}
+    </select>
+    <select id="selectByRecommend" resultMap="AnimationResult" >
+        <include refid="selectAnimation"/>/*引入公共头*/
+        from
+        animation as a
+        inner join
+        recommend as r
+        on
+        r.A_id = a.id
+    </select>
+</mapper>

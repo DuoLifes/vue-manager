@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dd.security.mapper.DdRoleMapper">
+
+    <!--/**
+     * 根据用户id获取用户拥有角色
+     */-->
+    <select id="getRolesByUserId" resultType="com.dd.security.entity.DdRole" parameterType="java.lang.String">
+        select
+            r.id as id,
+            r.name as name,
+            r.name_zh as nameZh
+        from
+            dd_role as r
+                inner join
+            dd_user_role as ur
+            on
+                r.id = ur.rid
+        where
+            ur.uid = #{userId}
+    </select>
+</mapper>
